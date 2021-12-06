@@ -411,7 +411,8 @@ Clusterpedia 中用来表示集群的资源叫做 *PediaCluster*, 而不是简�
 * 可以配置触发 PediaCluster 生命周期的 Condition 条件
 * 设置默认的资源收集策略以及名称前缀等
 
-这个功能会在 2022 Q1 或者 Q2 中开始详细讨论并实现。
+这个功能会在 2022 Q1 或者 Q2 中开始详细讨论并实现。  
+
 [回到页首](#top)
 # Roadmap<span id="roadmap"></span>
 当前只是暂定的 Roadmap，具体的排期还要看社区的需求程度。
@@ -434,6 +435,8 @@ Clusterpedia 中用来表示集群的资源叫做 *PediaCluster*, 而不是简�
 * 支持对集群资源更多的控制，例如 watch/create/update/delete 等操作
 * 默认存储层支持自定义 Collection Resource
 * 支持请求附带关系资源
+
+
 [回到页首](#top)
 
 # 使用注意
