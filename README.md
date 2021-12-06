@@ -419,7 +419,7 @@ Clusterpedia 中用来表示集群的资源叫做 *PediaCluster*, 而不是简�
 当前只是暂定的 Roadmap，具体的排期还要看社区的需求程度。
 
 ## 2021 Q4
-* * 从具有 [Server-Side Apply](https://kubernetes.io/docs/reference/using-api/server-side-apply/) 特性的集群中收集到的资源会带有很臃肿的 `managedFields` 字段， clustersynchro manager 模块会增加相应 feature gate，来允许用户在收集时裁减掉这个字段
+* 从具有 [Server-Side Apply](https://kubernetes.io/docs/reference/using-api/server-side-apply/) 特性的集群中收集到的资源会带有很臃肿的 `managedFields` 字段， clustersynchro manager 模块会增加相应 feature gate，来允许用户在收集时裁减掉这个字段
 * 同样的臃肿字段 annotations 中的 `kubectl.kubernetes.io/last-applied-configuration`，也要允许裁剪这个字段
 * 在指定集群获取资源时，如果集群处于异常状态时，应该在响应中添加 warning 来提醒用户
 * 对 *PediaCluster* 的状态信息有更准确的更新
