@@ -237,7 +237,7 @@ NAME          SHORTNAMES   APIVERSION   NAMESPACED   KIND
 pods          po           v1           true         Pod
 deployments   deploy       apps/v1      true         Deployment
 ```
-可以看到当前收集并支持 pods 和 deployments.apps 两种资源。
+可以看到当前收集的资源，支持 pods 和 deployments.apps 两种资源。
 
 **查看所有集群的 `kube-system` 命名空间下的 deployments**
 ```sh
@@ -343,10 +343,9 @@ Clusterpedia 支持以下复杂检索：
 * `分页`功能，可以指定 size 和 offset
 * `labels 过滤`
 
-对于字段的排序，实际的效果是根据存储层来决定的。默认存储层支持根据 `cluster`、`name`、`namespace`、`created_at`、`resource_version` 进行正序或者倒序的排序
+字段排序的实际效果取决于存储层。默认存储层支持根据 `cluster`、`name`、`namespace`、`created_at`、`resource_version` 进行正序或者倒序的排序。
 ### 检索条件的传递方式
-上面实例中，演示了使用 kubectl 来进行检索，而这些复杂的检索条件通过 `label` 来传递的。
-实际上 clusterpedia 还支持直接通过 `url query` 的传递这些检索条件
+上面的示例演示了使用 kubectl 进行检索，其中复杂的检索条件通过 `label` 进行传递。Clusterpedia 还支持直接通过 `url query` 传递这些检索条件。
 
 |作用|label key|url query|example|
 |---|---|---|---|
@@ -357,19 +356,19 @@ Clusterpedia 支持以下复杂检索：
 |指定 size |search.clusterpedia.io/size|size|`?size=100`
 |指定 offset |search.clsuterpedia.io/offset|offset|`?offset=10`
 
-`label key` 的操作符支持 ==, =, !=, in, not in 对于 size 这个条件，实际上 kubectl 可以通过 `--chunk-size` 来指定，而不需要通过 label key
+`label key` 的操作符支持 ==、=、!=、in、not in。对于 size 这个条件，kubectl 可以通过 `--chunk-size` 来指定，而不需要通过 label key。
 
 ### 集合资源(Collection Resource)
-在 clusterpedia 还有对资源更加高级的聚合，使用 `Collection Resource` 可以一次性获取到一组不同类型的资源
+Clusterpedia 还能对资源进行更高级的聚合，例如使用 `Collection Resource` 可以一次性获取到一组不同类型的资源。
 
-可以先查看一下当前 clusterpedia 支持哪些 `Collection Resource`
+我们先查看一下当前 Clusterpedia 支持哪些 `Collection Resource`：
 ```sh
 $ kubectl get collectionresources
 NAME        RESOURCES
 workloads   deployments.apps,daemonsets.apps,statefulsets.apps
 ```
 
-通过获取 workloads 便可获取到一组 deployment, daemonset, statefulset 聚合在一起的资源，而且 `Collection Resource` 同样支持所有的复杂查询
+通过获取 workloads 便可获取到一组 deployment、daemonset、statefulset 聚合在一起的资源，而且 `Collection Resource` 同样支持所有的复杂查询。
 
 **kubectl get collectionresources workloads 会默认获取所有集群下所有命名空间的相应资源**
 ```sh
@@ -379,58 +378,51 @@ cluster-1   apps    v1        DaemonSet    kube-system                   vsphere
 cluster-2   apps    v1        Deployment   kube-system                   calico-kube-controllers                       109d
 cluster-2   apps    v1        Deployment   kube-system                   coredns-coredns                               109d
 ```
-> 在 cluster-1 中增加收集 Daemonset, 输出有删减
+> 在 cluster-1 中增加收集 Daemonset，输出有删减
 
-由于 kubectl 的限制所以无法在 kubectl 来使用复杂查询，只能通过 `url query` 的方式来查询
+由于 kubectl 的限制，所以无法在 kubectl 使用复杂查询，只能通过 `url query` 的方式来查询。
 
 ## 对资源进行更复杂的操作
-clusterpedia 不仅仅只是用来做资源检索，和 wiki 一样，它也应该具有对资源简单的控制能力，例如 watch, create, delete, update 等操作
+Clusterpedia 不仅能做资源检索，与 wiki 一样，它也应该具有对资源简单的控制能力，例如 watch、create、delete、update 等操作。
 
-对于写操作，实际会采用双写 + 响应 warning 的方式来完成
-
-感兴趣的话可以在 issue 中一起讨论
+对于写操作，实际会采用双写 + 响应 warning 的方式来完成。
 
 ## 集群的自动发现和收集
-clusterpedia 中用来表示集群的资源叫做 *PediaCluster*, 而不是简单的 Cluster。
+Clusterpedia 中用来表示集群的资源叫做 *PediaCluster*, 而不是简单的 Cluster。
 
-**最主要的原因便是 clusterpedia 设计初衷便是让 clusterpedia 可以建立在已有的多集群管理平台之上。**
+**这是因为 Clusterpedia 设计初衷是建立在已有的多集群管理平台之上。**
 
-为了遵循初衷，第一个问题便是不能和已有的多集群平台中的资源冲突， Cluster 便是一个非常通用的代表集群的资源名称。
+为了遵循初衷，第一个问题是不能与已有的多集群平台中的资源冲突，Cluster 便是一个非常通用的代表集群的资源名称。
 
-另外为了更好的去接入到已有的多集群平台上，让已经接入的集群可以自动的完成资源收集，我们需要另外的一个集群发现机制。这个发现机制需要解决以下问题：
+另外为了更好地接入到已有的多集群平台上，让已经接入的集群可以自动完成资源收集，我们需要另外的一个集群发现机制。这个发现机制需要解决以下问题：
 * 能够获取到访问集群的认证信息
 * 可以配置触发 PediaCluster 生命周期的 Condition 条件
-* 设置默认的资源收集策略，以及名称前缀等
+* 设置默认的资源收集策略以及名称前缀等
 
 这个功能会在 Q1 或者 Q2 中开始详细讨论实现。
-## 当前进展
-clusterpedia 当前处于比较早期的阶段(v0.0.9-alpha)，核心功能刚刚完成，还有很多可以优化的地方，对于这些优化点也都提了对应的 issues，欢迎大家一起讨论
 
-这里简单说一些进入 v0.1.0 版本前的优化点:
-* 从具有 [Server-Side Apply](https://kubernetes.io/docs/reference/using-api/server-side-apply/) 特性的集群中收集到的资源会带有很臃肿的 `managedFields` 字段， clustersynchro manager 模块会增加相应 feature gate，来允许用户在收集时裁减掉这个字段
+## Roadmap
+当前只是暂定的 Roadmap，具体的排期还要看社区的需求程度。
+
+### 2021 Q4
+* * 从具有 [Server-Side Apply](https://kubernetes.io/docs/reference/using-api/server-side-apply/) 特性的集群中收集到的资源会带有很臃肿的 `managedFields` 字段， clustersynchro manager 模块会增加相应 feature gate，来允许用户在收集时裁减掉这个字段
 * 同样的臃肿字段 annotations 中的 `kubectl.kubernetes.io/last-applied-configuration`，也要允许裁剪这个字段
 * 在指定集群获取资源时，如果集群处于异常状态时，应该在响应中添加 warning 来提醒用户
 * 对 *PediaCluster* 的状态信息有更准确的更新
 * 弱网环境下，资源收集的优化
-
-更多的优化项，大家可以在 issue 中提出新的想法。
-## Roadmap
-当前只是暂定的 Roadmap，具体的排期还要看社区的需求程度
-
-### 2020 Q4
-* 在 2020 的 Q4 阶段会完成上述的优化项，并且完成对自定义资源的收集
+* 完成对自定义资源的收集
 * 详细化资源收集状态
 * 自定义资源的收集
 
-### Q1
+### 2022 Q1
 * 支持插件化存储层
 * 实现集群的自动发现和收集
 
-### Q2
+### 2022 Q2
 * 支持对集群资源更多的控制，例如 watch/create/update/delete 等操作
 * 默认存储层支持自定义 Collection Resource
 * 支持请求附带关系资源
 
 ## 使用注意
 ### 多集群网络连通性
-clusterpedia 实际并不会解决多集群环境下的网络连通问题，用户可以使用 [tower](https://github.com/kubesphere/tower) 等工具来连接访问子集群，也可以借助 [submariner](https://github.com/submariner-io/submariner) 或者 [skupper](https://github.com/skupperproject/skupper) 来解决跨集群网络问题。
+Clusterpedia 实际并不会解决多集群环境下的网络连通问题，用户可以使用 [tower](https://github.com/kubesphere/tower) 等工具来连接访问子集群，也可以借助 [submariner](https://github.com/submariner-io/submariner) 或者 [skupper](https://github.com/skupperproject/skupper) 来解决跨集群网络问题。
