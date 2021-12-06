@@ -1,9 +1,10 @@
+[架构设计](#design)
 Clusterpedia 这个名称借鉴自 Wikipedia，是多集群的百科全书，其核心理念是检索和简单控制多集群资源。
 
 通过聚合收集多集群资源，在兼容 Kubernetes OpenAPI 的基础上额外提供了更加强大的检索功能，让用户更方便快捷地在多集群中获取想要的任何资源。
 > Clusterpedia 的能力并不仅仅是检索查看，未来还会支持对资源的简单控制，就像 wiki 同样支持编辑词条一样
 
-# 架构设计 {#design}
+# 架构设计<span id="design"></span>
 Clusterpedia 的架构设计图如下所示：
 <div align="center"><img src="./docs/images/arch.png" style="width:900px;" /></div>
 从架构上分为四个部分：
