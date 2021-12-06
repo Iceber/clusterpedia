@@ -95,7 +95,7 @@ $ # 为方便后续操作，跳回到项目根目录
 $ cd ../..
 ```
 ## 部署 CRD
-crd 的部署就很简单，直接 apply yaml 即可。
+CRD 的部署就很简单，直接 apply yaml 即可。
 ```sh
 $ kubectl apply -f ./deploy/crds
 customresourcedefinition.apiextensions.k8s.io/pediaclusters.clusters.clusterpedia.io created
@@ -368,8 +368,9 @@ Clusterpedia 支持以下复杂检索：
 |指定 size |search.clusterpedia.io/size|size|`?size=100`
 |指定 offset |search.clsuterpedia.io/offset|offset|`?offset=10`
 
-`label key` 的操作符支持 ==、=、!=、in、not in。对于 size 这个条件，kubectl 可以通过 `--chunk-size` 来指定，而不需要通过 label key。
+`label key` 的操作符支持 ==、=、!=、in、not in。对于 size 这个条件，kubectl 可以通过 `--chunk-size` 来指定，而不需要通过 label key。  
 
+[回到页首](#top)
 ## 集合资源 (Collection Resource)
 Clusterpedia 还能对资源进行更高级的聚合，例如使用 `Collection Resource` 可以一次性获取到一组不同类型的资源。
 
