@@ -1,8 +1,8 @@
-Clusterpedia 这个名称借鉴自 Wikipedia，是多集群的百科全书，其核心理念是检索和控制多集群资源。
+Clusterpedia 这个名称借鉴自 Wikipedia，是多集群的百科全书，其核心理念是检索和简单控制多集群资源。
 
 通过聚合多集群资源，在兼容 Kubernetes OpenAPI 的基础上额外提供了更加强大的检索功能，让用户更方便快捷地在多集群中获取想要的任何资源。
-> 当然 Clusterpedia 的能力并不仅仅只是检索查看，未来还会支持对资源的简单控制，就像 wiki 同样支持编辑词条一样
-
+> Clusterpedia 的能力并不仅仅是检索查看，未来还会支持对资源的简单控制，就像 wiki 同样支持编辑词条一样
+[toc]
 # 架构设计
 <div align="center"><img src="./docs/images/arch.png" style="width:900px;" /></div>
 Clusterpedia 在架构上分为四个部分：
@@ -30,8 +30,8 @@ Clusterpedia 还提供了可以接入 MySQL 和 postgres 的默认存储层。
 - [x] 高可用
 > 部分未实现的功能，已经在 Roadmap 中
 
-# 安装部署
-当前 clusterpedia 还处于非常早期的阶段，在部署流程上还不够完善。
+# 部署
+Clusterpedia 当前还处于非常早期的阶段，在部署流程上还不够完善。
 
 所以部署时还需要对 yaml 进行一点点手动修改，克隆到本地后的文件夹结构如下：
 ```sh
@@ -87,8 +87,8 @@ crd 的部署就很简单，直接 apply yaml 即可。
 $ kubectl apply -f ./deploy/crds
 customresourcedefinition.apiextensions.k8s.io/pediaclusters.clusters.clusterpedia.io created
 ```
-## 部署 clusterpedia
-部署 clusterpedia 同样不需要任何修改，直接 apply。
+## 部署 Clusterpedia
+部署 Clusterpedia 同样不需要任何修改，直接 apply。
 > 如果选择连接自己的数据库，则需要修改存储层配置 `./deploy/clusterpedia_internalstorage_configmap.yaml`
 ```sh
 $ kubectl apply -f ./deploy
