@@ -2,15 +2,15 @@ Clusterpedia 这个名称借鉴自 Wikipedia，是多集群的百科全书，其
 
 通过聚合多集群资源，在兼容 Kubernetes OpenAPI 的基础上额外提供了更加强大的检索功能，让用户更方便快捷地在多集群中获取想要的任何资源。
 > Clusterpedia 的能力并不仅仅是检索查看，未来还会支持对资源的简单控制，就像 wiki 同样支持编辑词条一样
-[toc]
+
 # 架构设计
 <div align="center"><img src="./docs/images/arch.png" style="width:900px;" /></div>
 Clusterpedia 在架构上分为四个部分：
 
 * **Clusterpedia APIServer**：以 Aggregated API 的方式注册到 Kube APIServer，通过统一的入口来提供服务
 * **ClusterSynchro Manager**：管理用于同步集群资源的 Cluster Synchro
-* **Storage Layer (存储层)**：用来连接操作具体的存储组件，然后通过存储层接口注册到 Clusterpedia APIServer 和 ClusterSynchro Manager 中
-* **存储组件**：具体的存储设施，例如 MySQL、postgres、redis 或其他图数据库
+* **Storage Layer**：这是存储层，用来连接具体的存储组件，然后通过存储层接口注册到 Clusterpedia APIServer 和 ClusterSynchro Manager
+* **存储组件**：这是具体的存储设施，例如 MySQL、postgres、redis 或其他图数据库
 
 另外，Clusterpedia 会使用 *PediaCluster* 这个自定义资源来实现集群认证和资源收集配置。
 
@@ -28,7 +28,7 @@ Clusterpedia 还提供了可以接入 MySQL 和 postgres 的默认存储层。
 - [x] 根据集群当前的健康状态，自动启停资源收集
 - [ ] 插件化存储层，用户可以根据自己需求使用其他存储组件来自定义存储层
 - [x] 高可用
-> 部分未实现的功能，已经在 Roadmap 中
+> 上述未实现的功能已经在 Roadmap 中
 
 # 部署
 Clusterpedia 当前还处于非常早期的阶段，在部署流程上还不够完善。
