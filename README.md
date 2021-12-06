@@ -1,7 +1,7 @@
 ## Clusterpedia
-Clusterpedia，名字借鉴自 Wikipedia，同样也展现了 Clusterpedia 的核心理念 —— 多集群的百科全书。
+Clusterpedia 这个名称借鉴自 Wikipedia，是多集群的百科全书，其核心理念是检索和控制多集群资源。
 
-通过聚合多集群资源，在兼容 Kubernetes OpenAPI 的基础上额外提供了更加强大的检索功能，让用户更快更方便的在多集群中获取到想要的任何资源。
+通过聚合多集群资源，在兼容 Kubernetes OpenAPI 的基础上额外提供了更加强大的检索功能，让用户更方便快捷地在多集群中获取想要的任何资源。
 > 当然 Clusterpedia 的能力并不仅仅只是检索查看，未来还会支持对资源的简单控制，就像 wiki 同样支持编辑词条一样
 
 ### 架构设计
@@ -34,7 +34,7 @@ Clusterpedia 还提供了可以接入 MySQL 和 postgres 的默认存储层。
 ## 部署
 当前 clusterpedia 还处于非常早期的阶段，在项目流程化上还不够完善。
 
-部署时可能还需要对 yaml 进行一点点手动修改，克隆到本地后的文件夹结构如下：
+所以部署时还需要对 yaml 进行一点点手动修改，克隆到本地后的文件夹结构如下：
 ```sh
 $ git clone git@github.com:clusterpedia-io/clusterpedia.git
 $ cd clusterpedia
@@ -53,9 +53,9 @@ drwxr-xr-x  10 icebergu  staff   320B 12  2 10:44 pkg
 drwxr-xr-x  13 icebergu  staff   416B 12  2 10:44 vendor
 ```
 部署分为三个步骤:
-* 部署存储组件，默认为 MySQL 8.0
-* 部署 crd yaml
-* 部署 Clusterpedia
+1. 部署存储组件，默认为 MySQL 8.0
+2. 部署 crd yaml
+3. 部署 Clusterpedia
 
 ### 部署存储组件
 Clusterpedia 默认提供了 MySQL 8.0 作为存储组件，并且使用 local pv 的方式来存储数据。
@@ -113,7 +113,7 @@ clusterpedia-clustersynchro-manager-5f55dc5887-x26bg   1/1     Running   0      
 clusterpedia-internalstorage-mysql-6ffbc5f4c8-kxnh7    1/1     Running   0          2m30s
 ```
 
-## 集群资源收集
+## 收集集群资源
 部署 clusterpedia crds 后，可以通过 kubectl 来操作 *PediaCluster* 资源。
 ```sh
 $ kubectl get pediaclusters
