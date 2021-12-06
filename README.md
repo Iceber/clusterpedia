@@ -247,7 +247,7 @@ cluster-1   coredns                   2/2     2            2           68d
 cluster-2   calico-kube-controllers   1/1     1            1           64d
 cluster-2   coredns                   2/2     2            2           64d
 ```
-**查看所有集群的 kube-system、default 两个命名空间下的 deployments**
+**查看所有集群的 `kube-system`、`default` 两个命名空间下的 deployments**
 ```sh
 $ kubectl --cluster clusterpedia get deployments -A -l "search.clusterpedia.io/namespaces in (kube-system, default)"
 NAMESPACE     CLUSTER     NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
@@ -265,7 +265,7 @@ default       cluster-2   openldap                  1/1     1            1      
 default       cluster-2   phpldapadmin              1/1     1            1           41d
 ```
 
-**查看 cluster-1、cluster-2 两个集群下的 kube-system、default 命名空间下的 deployments**
+**查看 cluster-1、cluster-2 两个集群下的 `kube-system`、`default` 命名空间下的 deployments**
 ```sh
 $ kubectl --cluster clusterpedia get deployments -A -l "search.clusterpedia.io/clusters in (cluster-1, cluster-2),\
         search.clusterpedia.io/namespaces in (kube-system,default)"
@@ -284,7 +284,7 @@ default       cluster-2   openldap                  1/1     1            1      
 default       cluster-2   phpldapadmin              1/1     1            1           41d
 ```
 
-**查看 cluster-1、cluster-2 两个集群下的 kube-system、default 命名空间下的 deployments，并根据资源名称排序**
+**查看 cluster-1、cluster-2 两个集群下的 `kube-system`、`default` 命名空间下的 deployments，并根据资源名称排序**
 ```sh
 $ kubectl --cluster clusterpedia get deployments -A -l "search.clusterpedia.io/clusters in (cluster-1, cluster-2),\
         search.clusterpedia.io/namespaces in (kube-system,default),\
