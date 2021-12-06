@@ -249,7 +249,7 @@ deployments   deploy       apps/v1      true         Deployment
 ```
 可以看到当前收集的资源，支持 pods 和 deployments.apps 两种资源。
 
-**查看所有集群的 `kube-system` 命名空间下的 deployments**
+**查看所有集群的 `kube-system` 命名空间下的 deployments：**
 ```sh
 $ kubectl --cluster clusterpedia get deployments -n kube-system
 CLUSTER     NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
@@ -257,7 +257,7 @@ cluster-1   coredns                   2/2     2            2           68d
 cluster-2   calico-kube-controllers   1/1     1            1           64d
 cluster-2   coredns                   2/2     2            2           64d
 ```
-**查看所有集群的 `kube-system`、`default` 两个命名空间下的 deployments**
+**查看所有集群的 `kube-system`、`default` 两个命名空间下的 deployments：**
 ```sh
 $ kubectl --cluster clusterpedia get deployments -A -l "search.clusterpedia.io/namespaces in (kube-system, default)"
 NAMESPACE     CLUSTER     NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
@@ -275,7 +275,7 @@ default       cluster-2   openldap                  1/1     1            1      
 default       cluster-2   phpldapadmin              1/1     1            1           41d
 ```
 
-**查看 cluster-1、cluster-2 两个集群下的 `kube-system`、`default` 命名空间下的 deployments**
+**查看 cluster-1、cluster-2 两个集群下的 `kube-system`、`default` 命名空间下的 deployments：**
 ```sh
 $ kubectl --cluster clusterpedia get deployments -A -l "search.clusterpedia.io/clusters in (cluster-1, cluster-2),\
         search.clusterpedia.io/namespaces in (kube-system,default)"
@@ -294,7 +294,7 @@ default       cluster-2   openldap                  1/1     1            1      
 default       cluster-2   phpldapadmin              1/1     1            1           41d
 ```
 
-**查看 cluster-1、cluster-2 两个集群下的 `kube-system`、`default` 命名空间下的 deployments，并根据资源名称排序**
+**查看 cluster-1、cluster-2 两个集群下的 `kube-system`、`default` 命名空间下的 deployments，并根据资源名称排序：**
 ```sh
 $ kubectl --cluster clusterpedia get deployments -A -l "search.clusterpedia.io/clusters in (cluster-1, cluster-2),\
         search.clusterpedia.io/namespaces in (kube-system,default),\
@@ -316,7 +316,7 @@ default       cluster-2   phpldapadmin              1/1     1            1      
 ```
 
 ## 指定集群检索
-**如果想要检索指定集群的资源，可以使用 --cluster 指定具体的集群名称**
+**如果想要检索指定集群的资源，可以使用 --cluster 指定具体的集群名称：**
 ```sh
 $ kubectl --cluster cluster-1 get deployments -A
 NAMESPACE                           CLUSTER     NAME                                            READY   UP-TO-DATE   AVAILABLE   AGE
@@ -338,7 +338,7 @@ tigera-operator                     cluster-1   tigera-operator                 
 ```
 除了 `search.clusterpedia.io/clusters` 外其余复杂查询的支持与多集群检索相同。
 
-如果要获取一个资源的详情，则需要指定是哪个集群。
+如果要获取一个资源的详情，则需要指定是哪个集群：
 ```sh
 $ kubectl --cluster cluster-1 -n kube-system get deployments coredns -o wide
 CLUSTER     NAME      READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                                                   SELECTOR
@@ -381,7 +381,7 @@ workloads   deployments.apps,daemonsets.apps,statefulsets.apps
 
 通过获取 workloads 便可获取到一组 deployment、daemonset、statefulset 聚合在一起的资源，而且 `Collection Resource` 同样支持所有的复杂查询。
 
-**kubectl get collectionresources workloads 会默认获取所有集群下所有命名空间的相应资源**
+**kubectl get collectionresources workloads 会默认获取所有集群下所有命名空间的相应资源：**
 ```sh
 $ kubectl get collectionresources workloads
 CLUSTER     GROUP   VERSION   KIND         NAMESPACE                     NAME                                          AGE
