@@ -1,10 +1,9 @@
-## Clusterpedia
 Clusterpedia 这个名称借鉴自 Wikipedia，是多集群的百科全书，其核心理念是检索和控制多集群资源。
 
 通过聚合多集群资源，在兼容 Kubernetes OpenAPI 的基础上额外提供了更加强大的检索功能，让用户更方便快捷地在多集群中获取想要的任何资源。
 > 当然 Clusterpedia 的能力并不仅仅只是检索查看，未来还会支持对资源的简单控制，就像 wiki 同样支持编辑词条一样
 
-### 架构设计
+# 架构设计
 <div align="center"><img src="./docs/images/arch.png" style="width:900px;" /></div>
 Clusterpedia 在架构上分为四个部分：
 
@@ -19,7 +18,7 @@ Clusterpedia 还提供了可以接入 MySQL 和 postgres 的默认存储层。
 > Clusterpedia 并不关心用户所使用的具体存储设置是什么，
 > 用户可以根据自己的需求来选择或者实现存储层，然后将存储层以插件的形式注册到 Clusterpedia 中使用
 
-### 特性和功能
+# 特性和功能
 - [x] 支持复杂的检索条件、过滤条件、排序、分页等等
 - [ ] 支持查询资源时请求附带关系资源
 - [x] 统一主集群和多集群资源检索入口
@@ -31,7 +30,7 @@ Clusterpedia 还提供了可以接入 MySQL 和 postgres 的默认存储层。
 - [x] 高可用
 > 部分未实现的功能，已经在 Roadmap 中
 
-## 安装部署
+# 安装部署
 当前 clusterpedia 还处于非常早期的阶段，在部署流程上还不够完善。
 
 所以部署时还需要对 yaml 进行一点点手动修改，克隆到本地后的文件夹结构如下：
@@ -57,7 +56,7 @@ drwxr-xr-x  13 icebergu  staff   416B 12  2 10:44 vendor
 2. 部署 crd yaml
 3. 部署 Clusterpedia
 
-### 部署存储组件
+## 部署存储组件
 Clusterpedia 默认提供了 MySQL 8.0 作为存储组件，并且使用 local pv 的方式来存储数据。
 
 在部署 MySQL 时，需要手动指定 local pv 所在的节点，并在该节点上创建 */var/local/clusterpedia/internalstorage/mysql* 目录。
@@ -82,13 +81,13 @@ persistentvolume/clusterpedia-internalstorage-mysql created
 $ # 为方便后续操作，跳回到项目根目录
 $ cd ../..
 ```
-### 部署 CRD
+## 部署 CRD
 crd 的部署就很简单，直接 apply yaml 即可。
 ```sh
 $ kubectl apply -f ./deploy/crds
 customresourcedefinition.apiextensions.k8s.io/pediaclusters.clusters.clusterpedia.io created
 ```
-### 部署 clusterpedia
+## 部署 clusterpedia
 部署 clusterpedia 同样不需要任何修改，直接 apply。
 > 如果选择连接自己的数据库，则需要修改存储层配置 `./deploy/clusterpedia_internalstorage_configmap.yaml`
 ```sh
@@ -113,7 +112,7 @@ clusterpedia-clustersynchro-manager-5f55dc5887-x26bg   1/1     Running   0      
 clusterpedia-internalstorage-mysql-6ffbc5f4c8-kxnh7    1/1     Running   0          2m30s
 ```
 
-## 收集集群资源
+# 收集集群资源
 部署 clusterpedia crds 后，可以通过 kubectl 来操作 *PediaCluster* 资源。
 ```sh
 $ kubectl get pediaclusters
@@ -141,7 +140,7 @@ spec:
 *PediaCluster* 在配置上可以分成两部分：
 * **集群认证**
 * **指定资源收集 `.spec.resources`**
-### 集群认证
+## 集群认证
 `caData`、`tokenData`、`certData`、`keyData` 字段可以用于集群的验证。
 > 当前暂时不支持从 ConfigMap 或者 Secret 中获取验证相关的信息，
 > 不过该信息已经在 Roadmap 中了
@@ -163,7 +162,7 @@ $ SYNCHRO_CA=$(kubectl get secret $(kubectl get serviceaccount clusterpedia-sync
 $ kubectl apply -f cluster-1.yaml
 pediacluster.clusters.clusterpedia.io/cluster-1 created
 ```
-### 资源收集
+## 资源收集
 可以通过设置 `spec.resources` 字段的 `group` 和 `group` 下的 `resources` 来指定收集的资源。
 
 在 status 中也可以看到资源的收集状态：
@@ -199,7 +198,7 @@ status:
   version: v1.22.2
 ```
 
-## 资源检索
+# 资源检索
 配置好我们需要收集的资源后，就可以进行重头戏了：检索集群资源。
 
 Clusterpedia 支持两种资源检索：
@@ -229,7 +228,7 @@ Cluster "cluster-1" set.
 
 其中 clusterpedia 是一个特殊的 cluster，用于多集群检索，以 `kubectl --cluster clusterpedia` 的方式来检索多个集群的资源。
 
-### 多集群资源检索
+## 多集群资源检索
 先看一下我们都收集了哪些资源，只有被收集的资源才可以进行检索：
 ```sh
 $ kubectl --cluster clusterpedia api-resources
@@ -305,7 +304,7 @@ default       cluster-2   openldap                  1/1     1            1      
 default       cluster-2   phpldapadmin              1/1     1            1           41d
 ```
 
-### 指定集群检索
+## 指定集群检索
 **如果想要检索指定集群的资源，可以使用 --cluster 指定具体的集群名称**
 ```sh
 $ kubectl --cluster cluster-1 get deployments -A
@@ -334,7 +333,7 @@ $ kubectl --cluster cluster-1 -n kube-system get deployments coredns -o wide
 CLUSTER     NAME      READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                                                   SELECTOR
 cluster-1   coredns   2/2     2            2           68d   coredns      registry.aliyuncs.com/google_containers/coredns:v1.8.4   k8s-app=kube-dns
 ```
-### 复杂检索
+## 复杂检索
 Clusterpedia 支持以下复杂检索：
 * 指定一个或者多个`集群名称`
 * 指定一个或者多个`命名空间`
@@ -344,7 +343,7 @@ Clusterpedia 支持以下复杂检索：
 * `labels 过滤`
 
 字段排序的实际效果取决于存储层。默认存储层支持根据 `cluster`、`name`、`namespace`、`created_at`、`resource_version` 进行正序或者倒序的排序。
-### 检索条件的传递方式
+## 检索条件的传递方式
 上面的示例演示了使用 kubectl 进行检索，其中复杂的检索条件通过 `label` 进行传递。Clusterpedia 还支持直接通过 `url query` 传递这些检索条件。
 
 |作用|label key|url query|example|
@@ -358,7 +357,7 @@ Clusterpedia 支持以下复杂检索：
 
 `label key` 的操作符支持 ==、=、!=、in、not in。对于 size 这个条件，kubectl 可以通过 `--chunk-size` 来指定，而不需要通过 label key。
 
-### 集合资源(Collection Resource)
+## 集合资源 (Collection Resource)
 Clusterpedia 还能对资源进行更高级的聚合，例如使用 `Collection Resource` 可以一次性获取到一组不同类型的资源。
 
 我们先查看一下当前 Clusterpedia 支持哪些 `Collection Resource`：
@@ -401,10 +400,10 @@ Clusterpedia 中用来表示集群的资源叫做 *PediaCluster*, 而不是简�
 
 这个功能会在 2022 Q1 或者 Q2 中开始详细讨论并实现。
 
-## Roadmap
+# Roadmap
 当前只是暂定的 Roadmap，具体的排期还要看社区的需求程度。
 
-### 2021 Q4
+## 2021 Q4
 * * 从具有 [Server-Side Apply](https://kubernetes.io/docs/reference/using-api/server-side-apply/) 特性的集群中收集到的资源会带有很臃肿的 `managedFields` 字段， clustersynchro manager 模块会增加相应 feature gate，来允许用户在收集时裁减掉这个字段
 * 同样的臃肿字段 annotations 中的 `kubectl.kubernetes.io/last-applied-configuration`，也要允许裁剪这个字段
 * 在指定集群获取资源时，如果集群处于异常状态时，应该在响应中添加 warning 来提醒用户
@@ -414,15 +413,15 @@ Clusterpedia 中用来表示集群的资源叫做 *PediaCluster*, 而不是简�
 * 详细化资源收集状态
 * 自定义资源的收集
 
-### 2022 Q1
+## 2022 Q1
 * 支持插件化存储层
 * 实现集群的自动发现和收集
 
-### 2022 Q2
+## 2022 Q2
 * 支持对集群资源更多的控制，例如 watch/create/update/delete 等操作
 * 默认存储层支持自定义 Collection Resource
 * 支持请求附带关系资源
 
-## 使用注意
-### 多集群网络连通性
+# 使用注意
+## 多集群网络连通性
 Clusterpedia 实际并不会解决多集群环境下的网络连通问题，用户可以使用 [tower](https://github.com/kubesphere/tower) 等工具来连接访问子集群，也可以借助 [submariner](https://github.com/submariner-io/submariner) 或者 [skupper](https://github.com/skupperproject/skupper) 来解决跨集群网络问题。
