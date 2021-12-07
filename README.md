@@ -419,7 +419,7 @@ Clusterpedia 中用来表示集群的资源叫做 *PediaCluster*, 而不是简�
 # Roadmap<span id="roadmap"></span>
 当前只是暂定的 Roadmap，具体的排期还要看社区的需求程度。
 
-**关于一些未加入到 Roadmap 中的特性，可以在 issues 中讨论**
+**关于一些未加入到 Roadmap 中的特性，可以在 [issues](https://github.com/clusterpedia-io/clusterpedia/issues) 中讨论**
 
 ## 2021 Q4
 * [支持字段裁剪](https://github.com/clusterpedia-io/clusterpedia/issues/4)
