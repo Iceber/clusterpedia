@@ -49,7 +49,7 @@ Clusterpedia 当前还处于非常早期的阶段，在部署流程上还不够�
 
 所以部署时还需要对 yaml 进行一点点手动修改，克隆到本地后的文件夹结构如下：
 ```sh
-$ git clone git@github.com:clusterpedia-io/clusterpedia.git
+$ git clone https://github.com/clusterpedia-io/clusterpedia.git
 $ cd clusterpedia
 $ ll
 total 288
