@@ -1,4 +1,5 @@
 <span id="top"></span>
+# Clusterpedia
 Clusterpedia 这个名称借鉴自 Wikipedia，是多集群的百科全书，其核心理念是收集、检索和简单控制多集群资源。
 
 通过聚合收集多集群资源，在兼容 Kubernetes OpenAPI 的基础上额外提供更加强大的检索功能，让用户更方便快捷地在多集群中获取想要的任何资源。
@@ -398,6 +399,8 @@ Clusterpedia 不仅能做资源检索，与 wiki 一样，它也应该具有对�
 
 对于写操作，实际会采用双写 + 响应 warning 的方式来完成。
 
+**该功能会进行讨论，根据社区需求来决定是否实现**
+
 ## 集群的自动发现和收集<span id="discovery"></span>
 Clusterpedia 中用来表示集群的资源叫做 *PediaCluster*, 而不是简单的 Cluster。
 
@@ -410,20 +413,16 @@ Clusterpedia 中用来表示集群的资源叫做 *PediaCluster*, 而不是简�
 * 可以配置触发 PediaCluster 生命周期的 Condition 条件
 * 设置默认的资源收集策略以及名称前缀等
 
-这个功能会在 2022 Q1 或者 Q2 中开始详细讨论并实现。  
+这个功能会在 2022 Q1 或者 Q2 中开始详细讨论并实现。
 
 [回到页首](#top)
 # Roadmap<span id="roadmap"></span>
 当前只是暂定的 Roadmap，具体的排期还要看社区的需求程度。
 
+**关于一些未加入到 Roadmap 中的特性，可以在 issues 中讨论**
+
 ## 2021 Q4
-* 从具有 [Server-Side Apply](https://kubernetes.io/docs/reference/using-api/server-side-apply/) 特性的集群中收集到的资源会带有很臃肿的 `managedFields` 字段， clustersynchro manager 模块会增加相应 feature gate，来允许用户在收集时裁减掉这个字段
-* 同样的臃肿字段 annotations 中的 `kubectl.kubernetes.io/last-applied-configuration`，也要允许裁剪这个字段
-* 在指定集群获取资源时，如果集群处于异常状态时，应该在响应中添加 warning 来提醒用户
-* 对 *PediaCluster* 的状态信息有更准确的更新
-* 弱网环境下，资源收集的优化
-* 完成对自定义资源的收集
-* 详细化资源收集状态
+* [支持字段裁剪](https://github.com/clusterpedia-io/clusterpedia/issues/4)
 * 自定义资源的收集
 
 ## 2022 Q1
