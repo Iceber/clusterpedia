@@ -1,5 +1,5 @@
 BASEIMAGE ?= "alpine:3.14"
-REGISTRY ?= "ghcr.io/clusterpedia-io/clusterpedia"
+REGISTRY ?= "ghcr.io/iceber/clusterpedia"
 
 GOOS ?= $(shell go env GOOS)
 GOARCH ?= $(shell go env GOARCH)
@@ -20,16 +20,11 @@ LDFLAGS := "-X github.com/clusterpedia-io/clusterpedia/pkg/version.gitVersion=$(
 				-X github.com/clusterpedia-io/clusterpedia/pkg/version.gitTreeState=$(GIT_TREESTATE) \
 				-X github.com/clusterpedia-io/clusterpedia/pkg/version.buildDate=$(BUILDDATE)"
 
-ALPHA_VERSION="v0.0.9-alpha"
-VERSION ?= ""
+VERSION ?= "latest"
 ifeq ($(VERSION), "")
 	LATEST_TAG=$(shell git describe --tags)
-	ifeq ($(LATEST_TAG),)
-		VERSION="unknown"
-	else ifeq ($(LATEST_TAG),$(shell git describe --abbrev=0 --tags))
+	ifeq ($(LATEST_TAG),$(shell git describe --abbrev=0 --tags))
 		VERSION=$(LATEST_TAG)
-	else
-		VERSION=$(ALPHA_VERSION)
 	endif
 endif
 
@@ -55,17 +50,19 @@ clustersynchro-manager:
 
 images: image-apiserver image-clustersynchro-manager
 
-image-apiserver: apiserver
+image-apiserver:
+	GOOS="linux" $(MAKE) apiserver
 	docker buildx build \
 		-t ${REGISTRY}/apiserver-$(GOARCH):$(VERSION) \
-		--platform=$(GOOS)/$(GOARCH) \
+		--platform=linux/$(GOARCH) \
 		--build-arg BASEIMAGE=$(BASEIMAGE) \
 		--build-arg BINNAME=apiserver .
 	    
-image-clustersynchro-manager: clustersynchro-manager
+image-clustersynchro-manager: 
+	GOOS="linux" $(MAKE) clustersynchro-manager
 	docker buildx build \
 		-t $(REGISTRY)/clustersynchro-manager-$(GOARCH):$(VERSION) \
-		--platform=$(GOOS)/$(GOARCH) \
+		--platform=linux/$(GOARCH) \
 	    --build-arg BASEIMAGE=$(BASEIMAGE) \
 		--build-arg BINNAME=clustersynchro-manager .
 
@@ -93,13 +90,22 @@ push-apiserver-image:
 	set -e; \
 	images=""; \
 	for arch in $(RELEASE_ARCHS); do \
-		GOOS="linux" GOARCH=$$arch $(MAKE) image-apiserver; \
+		GOARCH=$$arch $(MAKE) image-apiserver; \
 		image=$(REGISTRY)/apiserver-$$arch:$(VERSION); \
 		docker push $$image; \
 	    images="$$images $$image"; \
+		if [ $(VERSION) != latest ]; then \
+		    latest_image=$(REGISTRY)/apiserver-$$arch:latest; \
+			docker tag $$image $$latest_image \
+			docker push $$latest_image; \
+		fi; \
 	done; \
 	docker manifest create $(REGISTRY)/apiserver:$(VERSION) --amend $$images; \
-	docker manifest push $(REGISTRY)/apiserver:$(VERSION)
+	docker manifest push $(REGISTRY)/apiserver:$(VERSION); \
+	if [ $(VERSION) != latest ]; then \
+		docker manifest create $(REGISTRY)/apiserver:latest --amend $$images; \
+		docker manifest push $(REGISTRY)/apiserver:latest; \
+	fi;
 
 push-clustersynchro-manager-image:
 	set -e; \
