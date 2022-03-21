@@ -4,6 +4,8 @@
 </p>
 
 # Clusterpedia
+
+
 This name Clusterpedia is inspired by Wikipedia. It is an encyclopedia of multi-cluster to synchronize, search for, and simply control multi-cluster resources. 
 
 
