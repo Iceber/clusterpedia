@@ -2,6 +2,8 @@ package app
 
 import (
 	"context"
+	"net/http"
+	_ "net/http/pprof"
 
 	"github.com/spf13/cobra"
 	utilfeature "k8s.io/apiserver/pkg/util/feature"
@@ -38,6 +40,10 @@ func NewClusterPediaServerCommand(ctx context.Context) *cobra.Command {
 			if err != nil {
 				return err
 			}
+
+			go func() {
+				http.ListenAndServe("0.0.0.0:6060", nil)
+			}()
 
 			if err := server.Run(ctx); err != nil {
 				return err

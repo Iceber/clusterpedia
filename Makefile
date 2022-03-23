@@ -1,9 +1,9 @@
 BASEIMAGE ?= "alpine:3.14"
-REGISTRY ?= "ghcr.io/clusterpedia-io/clusterpedia"
+REGISTRY ?= "ghcr.io/iceber/clusterpedia"
 
 GOOS ?= $(shell go env GOOS)
 GOARCH ?= $(shell go env GOARCH)
-RELEASE_ARCHS ?= amd64 arm64
+RELEASE_ARCHS ?= amd64
 
 # Git information, used to set clusterpedia version
 GIT_VERSION ?= $(shell git describe --tags --dirty)
