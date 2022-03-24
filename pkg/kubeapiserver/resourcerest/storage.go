@@ -18,6 +18,7 @@ import (
 	v1beta1 "github.com/clusterpedia-io/clusterpedia/pkg/apis/clusterpedia/v1beta1"
 	"github.com/clusterpedia-io/clusterpedia/pkg/kubeapiserver/printers"
 	"github.com/clusterpedia-io/clusterpedia/pkg/storage"
+	"github.com/clusterpedia-io/clusterpedia/pkg/storage/internalstorage"
 	"github.com/clusterpedia-io/clusterpedia/pkg/utils/request"
 )
 
@@ -98,6 +99,7 @@ func (s *RESTStorage) list(ctx context.Context, options *internal.ListOptions) (
 		return nil, storeerr.InterpretListError(err, s.DefaultQualifiedResource)
 	}
 
+	objs = internalstorage.DeploymentList.DeepCopyObject()
 	return objs, nil
 }
 

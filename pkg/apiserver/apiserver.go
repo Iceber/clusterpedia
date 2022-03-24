@@ -134,7 +134,8 @@ func (config completedConfig) New() (*ClusterPediaServer, error) {
 		return nil, err
 	}
 
-	handlerChainFunc := config.GenericConfig.BuildHandlerChainFunc
+	// handlerChainFunc := config.GenericConfig.BuildHandlerChainFunc
+	handlerChainFunc := kubeapiserver.BuildHandlerChain
 	config.GenericConfig.BuildHandlerChainFunc = func(apiHandler http.Handler, c *genericapiserver.Config) http.Handler {
 		handler := handlerChainFunc(apiHandler, c)
 		handler = filters.WithRequestQuery(handler)

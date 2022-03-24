@@ -187,11 +187,16 @@ func (s *ResourceStorage) List(ctx context.Context, listObject runtime.Object, o
 		return err
 	}
 
-	var objects [][]byte
-	if result := query.Find(&objects); result.Error != nil {
-		return InterpreError(s.storageGroupResource.String(), result.Error)
-	}
+	/*
+		var objects [][]byte
+		if result := query.Find(&objects); result.Error != nil {
+			return InterpreError(s.storageGroupResource.String(), result.Error)
+		}
+	*/
+	_ = query
+	return nil
 
+	objects = [][]byte{}
 	list, err := meta.ListAccessor(listObject)
 	if err != nil {
 		return InterpreError(s.storageGroupResource.String(), err)
