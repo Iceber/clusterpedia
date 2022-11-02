@@ -1,6 +1,9 @@
-FROM golang:1.19.2-alpine
+FROM golang:1.19.2
 
-RUN apk add --no-cache build-base git bash
+# FROM golang:1.19.2-alpine
+# RUN apk add --no-cache build-base git bash
+
+RUN apt-get update && apt-get install -y gcc-aarch64-linux-gnu gcc-x86-64-linux-gnu
 
 COPY . /clusterpedia
 

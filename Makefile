@@ -18,6 +18,8 @@ ifeq ($(GIT_DIFF), 1)
 	BUILDER_IMAGE_TAG := $(BUILDER_IMAGE_TAG)-dirty
 endif
 
+GOHOSTARCH = $(shell go env GOHOSTARCH)
+
 all: apiserver binding-apiserver clustersynchro-manager controller-manager
 
 gen-clusterconfigs:
@@ -92,9 +94,10 @@ image-builder:
 		--load \
 		-f builder.dockerfile . ; \
 
-build-image-%: image-builder
-	docker images
+build-image-%:
+	GOARCH=$(GOHOSTARCH) $(MAKE) image-builder
 	$(MAKE) $(subst build-,,$@)
+
 
 image-apiserver:
 	docker buildx build \
@@ -103,7 +106,7 @@ image-apiserver:
 		--load \
 		--build-arg BASE_IMAGE=$(BASE_IMAGE) \
 		--build-arg BIN_NAME=apiserver \
-		--build-arg BUILDER_IMAGE=$(REGISTRY)/builder-$(GOARCH):$(BUILDER_IMAGE_TAG) \
+		--build-arg BUILDER_IMAGE=$(REGISTRY)/builder-$(GOHOSTARCH):$(BUILDER_IMAGE_TAG) \
 		--build-arg ON_PLUGINS=$(ON_PLUGINS) .
 
 image-binding-apiserver:
@@ -113,7 +116,7 @@ image-binding-apiserver:
 		--load \
 		--build-arg BASE_IMAGE=$(BASE_IMAGE) \
 		--build-arg BIN_NAME=binding-apiserver \
-		--build-arg BUILDER_IMAGE=$(REGISTRY)/builder-$(GOARCH):$(BUILDER_IMAGE_TAG) \
+		--build-arg BUILDER_IMAGE=$(REGISTRY)/builder-$(GOHOSTARCH):$(BUILDER_IMAGE_TAG) \
 		--build-arg ON_PLUGINS=$(ON_PLUGINS) .
 
 image-clustersynchro-manager:
@@ -123,7 +126,7 @@ image-clustersynchro-manager:
 		--load \
 		--build-arg BASE_IMAGE=$(BASE_IMAGE) \
 		--build-arg BIN_NAME=clustersynchro-manager \
-		--build-arg BUILDER_IMAGE=$(REGISTRY)/builder-$(GOARCH):$(BUILDER_IMAGE_TAG) \
+		--build-arg BUILDER_IMAGE=$(REGISTRY)/builder-$(GOHOSTARCH):$(BUILDER_IMAGE_TAG) \
 		--build-arg ON_PLUGINS=$(ON_PLUGINS) .
 
 image-controller-manager:
@@ -133,7 +136,7 @@ image-controller-manager:
 		--load \
 		--build-arg BASE_IMAGE=$(BASE_IMAGE) \
 		--build-arg BIN_NAME=controller-manager \
-		--build-arg BUILDER_IMAGE=$(REGISTRY)/builder-$(GOARCH):$(BUILDER_IMAGE_TAG) \
+		--build-arg BUILDER_IMAGE=$(REGISTRY)/builder-$(GOHOSTARCH):$(BUILDER_IMAGE_TAG) \
 		--build-arg ON_PLUGINS=false .
 
 .PHONY: push-images

@@ -44,6 +44,21 @@ function copy_clusterpedia_repo() {
     rm $TMP_GOPATH/src/modules.txt
 }
 
+GOOS=${GOOS:-$(go env GOOS)}
+GOARCH=${GOARCH:-$(go env GOARCH)}
+
+CC_FOR_TARGET=${CC_FOR_TARGET:-""}
+CC=${CC:-""}
+if [ "${GOOS}" == "linux" ]; then
+    if [ "${GOARCH}" == "amd64" ]; then
+        CC_FOR_TARGET=${CC_FOR_TARGET:-"gcc-x86-64-linux-gnu"}
+        CC=${CC:-"x86-64-linux-gnu-gcc"}
+    else
+        CC_FOR_TARGET=${CC_FOR_TARGET:-"gcc-aarch64-linux-gnu"}
+        CC=${CC:-"aarch64-linux-gnu-gcc"}
+    fi
+fi
+
 function build_component() {
     local LDFLAGS=${BUILD_LDFLAGS:-""}
     if [ -f ${CLUSTERPEDIA_REPO}/ldflags.sh ]; then
@@ -51,7 +66,9 @@ function build_component() {
     fi
 
     cd $TMP_CLUSTERPEDIA
-    GO111MODULE=off CGO_ENABLED=1 GOPATH=$TMP_GOPATH go build -ldflags "${LDFLAGS}" -o $OUTPUT_DIR/bin/$1 ./cmd/$1
+    #local cmd="${BUILD_ARGS} go build -ldflags "${LDFLAGS}" -o $OUTPUT_DIR/bin/$1 ./cmd/$1"
+    #echo "build $1: \n $cmd"
+    GO111MODULE=off CGO_ENABLED=1 GOPATH=$TMP_GOPATH CC_FOR_TARGET=$CC_FOR_TARGET CC=$CC go build -ldflags "${LDFLAGS}" -o $OUTPUT_DIR/bin/$1 ./cmd/$1
 }
 
 cleanup
@@ -107,7 +124,7 @@ function build_plugin() {
     fi
 
     cd $TMP_PLUGIN
-    GO111MODULE=off CGO_ENABLED=1 GOPATH=$TMP_GOPATH go build -ldflags "$LDFLAGS" -buildmode=plugin -o $OUTPUT_DIR/plugins/$1
+    ${BUILD_ARGS} go build -ldflags "$LDFLAGS" -buildmode=plugin -o $OUTPUT_DIR/plugins/$1
 }
 
 copy_plugin_repo
