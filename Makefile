@@ -93,6 +93,7 @@ image-builder:
 		-f builder.dockerfile . ; \
 
 build-image-%: image-builder
+	docker images
 	$(MAKE) $(subst build-,,$@)
 
 image-apiserver:

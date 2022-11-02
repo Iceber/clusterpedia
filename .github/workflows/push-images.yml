@@ -14,6 +14,8 @@ jobs:
         with:
           # https://github.com/actions/checkout#fetch-all-history-for-all-tags-and-branches
           fetch-depth: 0
+      - name: Set up buildkit
+        uses: docker/setup-buildkit-action@v2
       - name: Login registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
