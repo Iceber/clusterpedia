@@ -52,7 +52,7 @@ echo $GOARCH
 echo $(go env GOHOSTARCH)
 CC_FOR_TARGET=${CC_FOR_TARGET:-""}
 CC=${CC:-""}
-if [[ "${GOOS}" == "linux" && "${GOOS}" != "$(go env GOHOSTARCH)" ]]; then
+if [[ "${GOOS}" == "linux" && "${GOARCH}" != "$(go env GOHOSTARCH)" ]]; then
     if [ "${GOARCH}" == "amd64" ]; then
         CC_FOR_TARGET=${CC_FOR_TARGET:-"gcc-x86-64-linux-gnu"}
         CC=${CC:-"x86-64-linux-gnu-gcc"}
