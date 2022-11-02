@@ -47,6 +47,9 @@ function copy_clusterpedia_repo() {
 GOOS=${GOOS:-$(go env GOOS)}
 GOARCH=${GOARCH:-$(go env GOARCH)}
 
+echo $GOOS
+echo $GOARCH
+echo $(go env GOHOSTARCH)
 CC_FOR_TARGET=${CC_FOR_TARGET:-""}
 CC=${CC:-""}
 if [[ "${GOOS}" == "linux" && "${GOOS}" != "$(go env GOHOSTARCH)" ]]; then
@@ -58,6 +61,8 @@ if [[ "${GOOS}" == "linux" && "${GOOS}" != "$(go env GOHOSTARCH)" ]]; then
         CC=${CC:-"aarch64-linux-gnu-gcc"}
     fi
 fi
+echo $CC
+echo $CC_FOR_TARGET
 
 function build_component() {
     local LDFLAGS=${BUILD_LDFLAGS:-""}
