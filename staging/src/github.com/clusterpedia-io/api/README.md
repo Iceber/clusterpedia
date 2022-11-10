@@ -1,6 +1,7 @@
 # api
 
 Schema of the Clusterpedia API types that are served by the Kubernetes API server as custom resources.
+some
 
 ## Purpose
 
