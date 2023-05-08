@@ -3,6 +3,7 @@ package scheme
 import (
 	// These imports are the API groups the API server will support.
 	apiextensionsinstall "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/install"
+	apiregistrationinstall "k8s.io/kube-aggregator/pkg/apis/apiregistration/install"
 	_ "k8s.io/kubernetes/pkg/apis/admission/install"
 	_ "k8s.io/kubernetes/pkg/apis/admissionregistration/install"
 	_ "k8s.io/kubernetes/pkg/apis/apiserverinternal/install"
@@ -23,10 +24,12 @@ import (
 	_ "k8s.io/kubernetes/pkg/apis/node/install"
 	_ "k8s.io/kubernetes/pkg/apis/policy/install"
 	_ "k8s.io/kubernetes/pkg/apis/rbac/install"
+	_ "k8s.io/kubernetes/pkg/apis/resource/install"
 	_ "k8s.io/kubernetes/pkg/apis/scheduling/install"
 	_ "k8s.io/kubernetes/pkg/apis/storage/install"
 )
 
 func init() {
 	apiextensionsinstall.Install(LegacyResourceScheme)
+	apiregistrationinstall.Install(LegacyResourceScheme)
 }
