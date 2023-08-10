@@ -67,6 +67,7 @@ function delete_cluster() {
 # install the Clusterpedia into the kind cluster
 function install_clusterpedia() {
     kubectl kustomize "${ROOT}/test/kustomize" | kubectl apply -f -
+    sleep 10
     echo kubectl get all -n clusterpedia-system
     kubectl get all -n clusterpedia-system
 }
