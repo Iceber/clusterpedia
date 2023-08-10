@@ -55,7 +55,7 @@ function create_cluster() {
     load_image "${name}" localtest/clustersynchro-manager-amd64:test
     load_image "${name}" localtest/apiserver-amd64:test
     load_image "${name}" localtest/controller-manager-amd64:test
-    load_image "${name}" docker.io/bitnami/postgresql:11.15.0-debian-10-r14
+    load_image "${name}" docker.io/bitnami/postgresql:12
 }
 
 # delete the kind cluster
