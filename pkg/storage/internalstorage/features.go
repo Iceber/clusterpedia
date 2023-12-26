@@ -11,6 +11,7 @@ const (
 	//
 	// owner: @cleverhu
 	// alpha: v0.3.0
+	// deprecated: v0.8.0
 	AllowRawSQLQuery featuregate.Feature = "AllowRawSQLQuery"
 
 	// AllowParameterizedSQLQuery is a feature gate for the apiserver to allow querying by the parameterized SQL
@@ -31,6 +32,6 @@ func init() {
 // defaultInternalStorageFeatureGates consists of all known custom internalstorage feature keys.
 // To add a new feature, define a key for it above and add it here.
 var defaultInternalStorageFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
-	AllowRawSQLQuery:           {Default: false, PreRelease: featuregate.Alpha},
+	AllowRawSQLQuery:           {Default: false, PreRelease: featuregate.Deprecated},
 	AllowParameterizedSQLQuery: {Default: false, PreRelease: featuregate.Alpha},
 }
