@@ -33,7 +33,7 @@ type ClusterPediaServerOptions struct {
 	Authentication *genericoptions.DelegatingAuthenticationOptions
 	Authorization  *genericoptions.DelegatingAuthorizationOptions
 	Audit          *genericoptions.AuditOptions
-	Features       *genericoptions.FeatureOptions
+	Features       *FeatureOptions
 	CoreAPI        *genericoptions.CoreAPIOptions
 	FeatureGate    featuregate.FeatureGate
 	Traces         *genericoptions.TracingOptions
@@ -50,7 +50,7 @@ func NewServerOptions() *ClusterPediaServerOptions {
 	// into this server.  So allow many concurrent operations.
 	sso.HTTP2MaxStreamsPerConnection = 1000
 
-	featureOptions := genericoptions.NewFeatureOptions()
+	featureOptions := NewFeatureOptions()
 	featureOptions.EnablePriorityAndFairness = false
 
 	return &ClusterPediaServerOptions{

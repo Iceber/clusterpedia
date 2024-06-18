@@ -64,6 +64,8 @@ func NewDefaultConfig() *Config {
 }
 
 type ExtraConfig struct {
+	EnableRemainingItemCount bool
+
 	StorageFactory           storage.StorageFactory
 	InformerFactory          informers.SharedInformerFactory
 	InitialAPIGroupResources []*restmapper.APIGroupResources

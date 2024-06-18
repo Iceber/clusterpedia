@@ -11,10 +11,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/watch"
 	genericrequest "k8s.io/apiserver/pkg/endpoints/request"
-	genericfeatures "k8s.io/apiserver/pkg/features"
 	"k8s.io/apiserver/pkg/registry/rest"
 	storeerr "k8s.io/apiserver/pkg/storage/errors"
-	utilfeature "k8s.io/apiserver/pkg/util/feature"
 
 	internal "github.com/clusterpedia-io/api/clusterpedia"
 	"github.com/clusterpedia-io/api/clusterpedia/scheme"
@@ -26,7 +24,8 @@ import (
 )
 
 type RESTStorage struct {
-	Serializer runtime.NegotiatedSerializer
+	EnableRemainingItemCount bool
+	Serializer               runtime.NegotiatedSerializer
 
 	DefaultQualifiedResource schema.GroupResource
 
@@ -92,8 +91,8 @@ func (s *RESTStorage) resolveListOptions(ctx context.Context) (*internal.ListOpt
 	}
 
 	if options.WithRemainingCount == nil {
-		if enabled := utilfeature.DefaultFeatureGate.Enabled(genericfeatures.RemainingItemCount); enabled {
-			options.WithRemainingCount = &enabled
+		if s.EnableRemainingItemCount {
+			options.WithRemainingCount = &s.EnableRemainingItemCount
 		}
 	}
 

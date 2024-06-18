@@ -63,7 +63,8 @@ func init() {
 type Config struct {
 	GenericConfig *genericapiserver.RecommendedConfig
 
-	StorageFactory storage.StorageFactory
+	StorageFactory           storage.StorageFactory
+	EnableRemainingItemCount bool
 }
 
 type ClusterPediaServer struct {
@@ -73,8 +74,9 @@ type ClusterPediaServer struct {
 type completedConfig struct {
 	GenericConfig genericapiserver.CompletedConfig
 
-	ClientConfig   *clientrest.Config
-	StorageFactory storage.StorageFactory
+	ClientConfig             *clientrest.Config
+	StorageFactory           storage.StorageFactory
+	EnableRemainingItemCount bool
 }
 
 // CompletedConfig embeds a private pointer that cannot be instantiated outside of this package.
@@ -88,6 +90,7 @@ func (cfg *Config) Complete() CompletedConfig {
 		cfg.GenericConfig.Complete(),
 		cfg.GenericConfig.ClientConfig,
 		cfg.StorageFactory,
+		cfg.EnableRemainingItemCount,
 	}
 
 	c.GenericConfig.Version = &version.Info{
@@ -126,6 +129,7 @@ func (config completedConfig) New() (*ClusterPediaServer, error) {
 	resourceServerConfig.GenericConfig.LoopbackClientConfig = config.GenericConfig.LoopbackClientConfig
 	resourceServerConfig.GenericConfig.TracerProvider = config.GenericConfig.TracerProvider
 	resourceServerConfig.ExtraConfig = kubeapiserver.ExtraConfig{
+		EnableRemainingItemCount: config.EnableRemainingItemCount,
 		InformerFactory:          clusterpediaInformerFactory,
 		StorageFactory:           config.StorageFactory,
 		InitialAPIGroupResources: initialAPIGroupResources,
@@ -150,7 +154,7 @@ func (config completedConfig) New() (*ClusterPediaServer, error) {
 
 	v1beta1storage := map[string]rest.Storage{}
 	v1beta1storage["resources"] = resources.NewREST(kubeResourceAPIServer.Handler)
-	v1beta1storage["collectionresources"] = collectionresources.NewREST(config.GenericConfig.Serializer, config.StorageFactory)
+	v1beta1storage["collectionresources"] = collectionresources.NewREST(config.GenericConfig.Serializer, config.StorageFactory, config.EnableRemainingItemCount)
 
 	apiGroupInfo := genericapiserver.NewDefaultAPIGroupInfo(internal.GroupName, Scheme, ParameterCodec, Codecs)
 	apiGroupInfo.VersionedResourcesStorageMap["v1beta1"] = v1beta1storage

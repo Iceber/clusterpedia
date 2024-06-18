@@ -12,9 +12,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/duration"
-	genericfeatures "k8s.io/apiserver/pkg/features"
 	"k8s.io/apiserver/pkg/registry/rest"
-	utilfeature "k8s.io/apiserver/pkg/util/feature"
 	"k8s.io/klog/v2"
 
 	internal "github.com/clusterpedia-io/api/clusterpedia"
@@ -28,7 +26,8 @@ import (
 )
 
 type REST struct {
-	serializer runtime.NegotiatedSerializer
+	enableRemainingItemCount bool
+	serializer               runtime.NegotiatedSerializer
 
 	list     *internal.CollectionResourceList
 	storages map[string]storage.CollectionResourceStorage
@@ -40,7 +39,7 @@ var _ rest.Getter = &REST{}
 var _ rest.Storage = &REST{}
 var _ rest.SingularNameProvider = &REST{}
 
-func NewREST(serializer runtime.NegotiatedSerializer, factory storage.StorageFactory) *REST {
+func NewREST(serializer runtime.NegotiatedSerializer, factory storage.StorageFactory, enableRemainingItemCount bool) *REST {
 	crs, err := factory.GetCollectionResources(context.TODO())
 	if err != nil {
 		klog.Fatal(err)
@@ -74,7 +73,7 @@ func NewREST(serializer runtime.NegotiatedSerializer, factory storage.StorageFac
 		list.Items = append(list.Items, *cr)
 	}
 
-	return &REST{serializer, list, storages}
+	return &REST{enableRemainingItemCount, serializer, list, storages}
 }
 
 func (s *REST) New() runtime.Object {
@@ -117,8 +116,8 @@ func (s *REST) Get(ctx context.Context, name string, _ *metav1.GetOptions) (runt
 	}
 
 	if opts.WithRemainingCount == nil {
-		if enabled := utilfeature.DefaultFeatureGate.Enabled(genericfeatures.RemainingItemCount); enabled {
-			opts.WithRemainingCount = &enabled
+		if s.enableRemainingItemCount {
+			opts.WithRemainingCount = &s.enableRemainingItemCount
 		}
 	}
 
