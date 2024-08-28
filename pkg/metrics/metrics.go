@@ -2,6 +2,7 @@ package metrics
 
 import (
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
 	versionCollector "github.com/prometheus/client_golang/prometheus/collectors/version"
 )
 
@@ -12,5 +13,9 @@ func DefaultRegistry() prometheus.Registerer {
 }
 
 func init() {
-	registry.MustRegister(versionCollector.NewCollector("clusterpedia_kube_state_metrics"))
+	registry.MustRegister(
+		versionCollector.NewCollector("clusterpedia_kube_state_metrics"),
+		collectors.NewGoCollector(),
+		collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
+	)
 }
